@@ -3,8 +3,8 @@ import java.util.TreeMap;
 
 public class LibrarySystem {
 
-    private ArrayList<Book> bookList = new ArrayList<>();
     private TreeMap<Integer, Book> bookMap = new TreeMap<>();
+    private ArrayList<Book> books = new ArrayList<>();
 
     // A. 도서 추가
     public void addBook(String title, String author, String publisher, int year) {
@@ -17,40 +17,46 @@ public class LibrarySystem {
 
         Book b = new Book(title, author, publisher, year);
 
-        bookList.add(b);   // 출력용 전체 리스트
-        bookMap.put(b.getId(), b); // ID 기반 빠른 조회
+        bookMap.put(b.getId(), b);
+        books.add(b);
 
         System.out.println("도서 저장 완료! (ID: " + b.getId() + ")");
     }
 
-    // B. 도서 검색 (ID 기반 - TreeMap)
-    public void searchBook(int id) {
-        if (!bookMap.containsKey(id)) {
-            System.out.println("검색 결과 없음");
-            return;
+    // B. 도서 검색
+    public void searchBook(String title, String author, String publisher, int year) {
+        boolean found = false;
+
+        for (Book b : books) {
+            if (b.getTitle().equals(title) &&
+                    b.getAuthor().equals(author) &&
+                    b.getPublisher().equals(publisher) &&
+                    b.getYear() == year) {
+
+                System.out.println(b);
+                found = true;
+            }
         }
 
-        System.out.println(bookMap.get(id));
+        if (!found) System.out.println("검색 결과가 없습니다.");
     }
 
-    // C. 전체 도서 출력
+    // C. 전체 출력
     public void printAllBooks() {
-        if (bookList.isEmpty()) {
+        if (books.isEmpty()) {
             System.out.println("저장된 도서가 없습니다.");
             return;
         }
 
-        for (Book b : bookList) {
+        for (Book b : books) {
             System.out.println(b);
         }
     }
 
-    // D. 도서 대출 - TreeMap 기반 빠른 접근
+    // D. 도서 대출
     public boolean borrowBook(int id) {
         Book b = bookMap.get(id);
-
-        if (b == null) return false;
-        if (b.isBorrowed()) return false;
+        if (b == null || b.isBorrowed()) return false;
 
         b.borrow();
         return true;
@@ -59,18 +65,9 @@ public class LibrarySystem {
     // E. 도서 반납
     public boolean returnBook(int id) {
         Book b = bookMap.get(id);
-
-        if (b == null) return false;
-        if (!b.isBorrowed()) return false;
+        if (b == null || !b.isBorrowed()) return false;
 
         b.returnBook();
         return true;
-    }
-
-    // F. 목록 출력 (ID 순)
-    public void showBooks() {
-        for (Book b : bookList) {
-            System.out.println(b);
-        }
     }
 }
