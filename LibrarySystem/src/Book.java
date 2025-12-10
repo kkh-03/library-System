@@ -22,8 +22,8 @@ public class Book {
     public String getAuthor() { return author; }
     public String getPublisher() { return publisher; }
     public int getYear() { return year; }
-
     public boolean isBorrowed() { return borrowed; }
+
     public void borrow() { borrowed = true; }
     public void returnBook() { borrowed = false; }
 
